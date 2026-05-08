@@ -6,7 +6,7 @@ Parent's Day Digital Card Service
 ## Project Goal
 Build a mobile-first web service where users can create and share a Parent's Day digital card.
 
-Users can decorate the front side of the card with a background, photo, and stickers.  
+Users can decorate the front side of the card with a background, photo, and stickers.
 When the card is clicked, it flips to the back side, where the user can write a letter and attach a voice message.
 
 Recipients can open the shared card, see an envelope opening animation, flip the card, read the letter, play the voice message, leave a reaction, save the card, and create their own card.
