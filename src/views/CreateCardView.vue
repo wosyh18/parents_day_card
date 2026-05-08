@@ -6,6 +6,7 @@ import StickerPicker from '../components/StickerPicker.vue'
 import LetterEditor from '../components/LetterEditor.vue'
 import VoiceRecorder from '../components/VoiceRecorder.vue'
 import { useCardStore } from '../stores/cardStore'
+import { stickers } from '../data/stickers'
 import { exportCardAsImage } from '../lib/imageExport'
 import { saveCardToCloud } from '../lib/cardStorage'
 import { initKakao, shareToKakao } from '../lib/kakao'
@@ -37,7 +38,38 @@ const handlePhotoUpload = (event: Event) => {
 }
 
 const handleExportImage = async () => {
-  await exportCardAsImage('interactive-card')
+  if (isSaving.value) return
+  isSaving.value = true
+  
+  try {
+    const el = document.getElementById('full-card-capture')
+    if (el) {
+      // 1. 선명한 캡처를 위해 실제 가시성을 부여하되 화면 맨 뒤로 보냄
+      el.style.display = 'flex'
+      el.style.position = 'fixed'
+      el.style.left = '0'
+      el.style.top = '0'
+      el.style.opacity = '1'
+      el.style.visibility = 'visible'
+      el.style.zIndex = '-9999' 
+      
+      // 2. 렌더링 엔진이 모든 요소를 그리도록 충분히 대기
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // 3. 캡처 실행
+      await exportCardAsImage('full-card-capture', `parents-day-card-${Date.now()}.png`)
+      
+      // 4. 완료 후 다시 숨김
+      el.style.display = 'none'
+      el.style.left = '-9999px'
+      el.style.visibility = 'hidden'
+    }
+  } catch (err) {
+    console.error('Export Error:', err)
+    alert('이미지 생성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.')
+  } finally {
+    isSaving.value = false
+  }
 }
 
 const handleSaveCard = async () => {
@@ -166,5 +198,73 @@ const handleKakaoShare = async () => {
         </div>
       </div>
     </main>
+
+    <!-- Hidden Capture Area (Front and Back combined) -->
+    <div 
+      id="full-card-capture" 
+      class="flex-col gap-8 p-12 w-[500px]"
+      style="display: none; position: fixed; left: -9999px; background-color: #ffffff; font-family: sans-serif;"
+    >
+      <div class="text-center mb-6">
+        <h2 class="text-3xl font-bold mb-2" style="color: #f43f5e !important;">어버이날 사랑 카드</h2>
+        <p style="color: #4b5563 !important; font-size: 16px;">항상 감사하고 사랑합니다.</p>
+      </div>
+
+      <!-- Front Side -->
+      <div 
+        class="w-full aspect-[3/4] rounded-3xl shadow-2xl overflow-hidden flex flex-col items-center justify-center p-8 border-[6px] border-white relative"
+        :style="{ background: cardStore.selectedBackground.value }"
+      >
+        <div class="w-full h-full rounded-2xl relative overflow-hidden bg-white/30 backdrop-blur-[2px] border-2 border-dashed border-gray-300/30">
+          <img 
+            v-if="cardStore.state.photoDataUrl"
+            :src="cardStore.state.photoDataUrl" 
+            class="absolute origin-center"
+            :style="{
+              left: '50%',
+              top: '50%',
+              transform: `translate(-50%, -50%) translate(${cardStore.state.photoTransform.x}px, ${cardStore.state.photoTransform.y}px) scale(${cardStore.state.photoTransform.scale}) rotate(${cardStore.state.photoTransform.rotation}deg)`,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+            }"
+          />
+          <div v-for="placed in cardStore.state.placedStickers" :key="placed.id"
+            class="absolute"
+            :style="{
+              left: `${placed.x}%`,
+              top: `${placed.y}%`,
+              transform: `translate(-50%, -50%) rotate(${placed.rotation}deg) scale(${placed.scale})`,
+              fontSize: '3rem'
+            }"
+          >
+            {{ stickers.find(s => s.id === placed.stickerId)?.emoji }}
+          </div>
+        </div>
+        <p class="mt-6 font-bold text-2xl" style="color: #1f2937 !important;">감사합니다 사랑합니다</p>
+      </div>
+
+      <!-- Back Side -->
+      <div 
+        class="w-full aspect-[3/4] rounded-3xl shadow-2xl p-10 border-[6px] border-white flex flex-col"
+        :style="{ background: cardStore.selectedBackground.value }"
+      >
+        <div class="flex-grow rounded-2xl p-8 shadow-inner flex flex-col" style="background-color: rgba(255, 255, 255, 0.95);">
+          <div class="whitespace-pre-wrap text-2xl leading-relaxed font-handwriting h-full" style="color: #111827 !important; font-weight: 600;">
+            {{ cardStore.state.letter || '사랑하는 부모님께...' }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-8 opacity-40 text-[14px]" style="color: #6b7280;">
+        © 2026 Parents Day Card App
+      </div>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.font-handwriting {
+  font-family: 'Nanum Pen Script', cursive;
+}
+</style>

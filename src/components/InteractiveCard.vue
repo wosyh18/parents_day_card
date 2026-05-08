@@ -5,6 +5,7 @@ import { stickers } from '../data/stickers'
 
 const props = defineProps<{
   editable?: boolean
+  isExporting?: boolean
 }>()
 
 const cardStore = useCardStore()

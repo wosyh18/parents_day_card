@@ -1,22 +1,30 @@
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 
 export async function exportCardAsImage(elementId: string, fileName: string = 'parents-day-card.png') {
   const element = document.getElementById(elementId);
-  if (!element) return;
+  if (!element) {
+    console.error('Element not found:', elementId);
+    return;
+  }
 
   try {
-    const canvas = await html2canvas(element, {
-      useCORS: true,
-      scale: 2, // Better quality
-      backgroundColor: null,
+    // 폰트와 이미지가 로드될 때까지 약간의 여유를 둠
+    const dataUrl = await toPng(element, {
+      quality: 0.95,
+      pixelRatio: 2,
+      backgroundColor: '#ffffff',
+      cacheBust: true,
     });
 
     const link = document.createElement('a');
+    link.href = dataUrl;
     link.download = fileName;
-    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+    
   } catch (error) {
-    console.error('Failed to export image:', error);
-    alert('이미지 저장 중 오류가 발생했습니다.');
+    console.error('Image Export Error:', error);
+    throw error;
   }
 }
