@@ -7,7 +7,7 @@ import LetterEditor from '../components/LetterEditor.vue'
 import VoiceRecorder from '../components/VoiceRecorder.vue'
 import { useCardStore } from '../stores/cardStore'
 import { exportCardAsImage } from '../lib/imageExport'
-import { saveCardToLocal } from '../lib/cardStorage'
+import { saveCardToCloud } from '../lib/cardStorage'
 import { initKakao, shareToKakao } from '../lib/kakao'
 
 const cardStore = useCardStore()
@@ -40,12 +40,15 @@ const handleExportImage = async () => {
   await exportCardAsImage('interactive-card')
 }
 
-const handleSaveCard = () => {
+const handleSaveCard = async () => {
+  if (isSaving.value) return
   isSaving.value = true
   try {
-    const id = saveCardToLocal(cardStore.state)
-    savedId.value = id
-    alert('카드가 로컬 저장소에 저장되었습니다! (같은 브라우저에서만 공유 가능)')
+    const id = await saveCardToCloud(cardStore.state)
+    if (id) {
+      savedId.value = id
+      alert('카드가 클라우드 서버에 저장되었습니다! 이제 어디서든 공유가 가능합니다.')
+    }
   } catch (err) {
     console.error(err)
     alert('저장 중 오류가 발생했습니다.')
@@ -54,27 +57,35 @@ const handleSaveCard = () => {
   }
 }
 
-const handleCopyLink = () => {
+const handleCopyLink = async () => {
   if (!savedId.value) {
-    const id = saveCardToLocal(cardStore.state)
-    savedId.value = id
+    isSaving.value = true
+    const id = await saveCardToCloud(cardStore.state)
+    if (id) savedId.value = id
+    isSaving.value = false
   }
   
-  const url = `${window.location.origin}/card/${savedId.value}`
-  navigator.clipboard.writeText(url).then(() => {
-    alert('공유 링크가 클립보드에 복사되었습니다. (같은 기기/브라우저 전용)')
-  })
+  if (savedId.value) {
+    const url = `${window.location.origin}/card/${savedId.value}`
+    navigator.clipboard.writeText(url).then(() => {
+      alert('공유 링크가 클립보드에 복사되었습니다!')
+    })
+  }
 }
 
-const handleKakaoShare = () => {
+const handleKakaoShare = async () => {
   if (!savedId.value) {
-    const id = saveCardToLocal(cardStore.state)
-    savedId.value = id
+    isSaving.value = true
+    const id = await saveCardToCloud(cardStore.state)
+    if (id) savedId.value = id
+    isSaving.value = false
   }
   
-  const success = shareToKakao(savedId.value, cardStore.state.letter || '부모님 사랑합니다!')
-  if (!success) {
-    alert('카카오톡 SDK가 초기화되지 않았거나 키가 누락되었습니다. 링크 복사를 이용해주세요.')
+  if (savedId.value) {
+    const success = shareToKakao(savedId.value, cardStore.state.letter || '부모님 사랑합니다!')
+    if (!success) {
+      alert('카카오톡 SDK가 초기화되지 않았거나 키가 누락되었습니다. 링크 복사를 이용해주세요.')
+    }
   }
 }
 </script>

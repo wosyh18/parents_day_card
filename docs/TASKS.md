@@ -1,74 +1,77 @@
 # Implementation Tasks
 
-## Phase 1. Project Setup & Interactive Card Component
+## Phase 1. Project Setup & Interactive Card Component ✅
 
-- [ ] Set up Vue 3 project with Vite and TypeScript
-- [ ] Install and configure Tailwind CSS
-- [ ] Install and configure Pinia
-- [ ] Install and configure Vue Router
-- [ ] Create HomeView.vue
-- [ ] Create CreateCardView.vue
-- [ ] Create InteractiveCard.vue
-- [ ] Implement 3D card flip effect using CSS transform
-- [ ] Create card front layout
-- [ ] Create card back layout
-- [ ] Make layout mobile-first and responsive
+- [x] Set up Vue 3 project with Vite and TypeScript
+- [x] Install and configure Tailwind CSS
+- [x] Install and configure Pinia
+- [x] Install and configure Vue Router
+- [x] Create HomeView.vue
+- [x] Create CreateCardView.vue
+- [x] Create InteractiveCard.vue
+- [x] Implement 3D card flip effect using CSS transform
+- [x] Create card front layout
+- [x] Create card back layout
+- [x] Make layout mobile-first and responsive
 
-## Phase 2. Card Front Customization
+## Phase 2. Card Front Customization ✅
 
-- [ ] Create 8 background presets
-- [ ] Create BackgroundSelector.vue
-- [ ] Implement photo upload
-- [ ] Convert uploaded photo to base64/Data URL
-- [ ] Display uploaded photo on card front
-- [ ] Create sticker preset data
-- [ ] Create StickerPicker.vue
-- [ ] Add selected stickers to card front
-- [ ] Store background, photo, and stickers in Pinia
+- [x] Create 8 background presets
+- [x] Create BackgroundSelector.vue
+- [x] Implement photo upload
+- [x] Convert uploaded photo to base64/Data URL
+- [x] Display uploaded photo on card front
+- [x] Create sticker preset data
+- [x] Create StickerPicker.vue
+- [x] Add selected stickers to card front
+- [x] Store background, photo, and stickers in Pinia
 
-## Phase 3. AI Message Generator & Letter Editor
+## Phase 3. AI Message Generator & Letter Editor ✅
 
-- [ ] Create LetterEditor.vue
-- [ ] Bind textarea to Pinia store
-- [ ] Create mock AI messages
-- [ ] Add AI recommendation button
-- [ ] Show 3 predefined Parent's Day messages
-- [ ] Each message should be 3 to 5 lines
-- [ ] Fill textarea when a recommendation is selected
-- [ ] Render letter on card back side
+- [x] Create LetterEditor.vue
+- [x] Bind textarea to Pinia store
+- [x] Create mock AI messages
+- [x] Add AI recommendation button
+- [x] Show 3 predefined Parent's Day messages
+- [x] Each message should be 3 to 5 lines
+- [x] Fill textarea when a recommendation is selected
+- [x] Render letter on card back side
 
-## Phase 4. Audio Recording & Voice Attachment
+## Phase 4. Audio Recording & Voice Attachment ✅
 
-- [ ] Create VoiceRecorder.vue
-- [ ] Implement MediaRecorder API
-- [ ] Add Record, Stop, Play, and Re-record buttons
-- [ ] Add recording timer
-- [ ] Convert recorded Blob to Data URL
-- [ ] Store recorded audio Data URL in Pinia
-- [ ] Display audio player on card back side
-- [ ] Show warning if MediaRecorder is not supported
+- [x] Create VoiceRecorder.vue
+- [x] Implement MediaRecorder API
+- [x] Add Record, Stop, Play, and Re-record buttons
+- [x] Add recording timer
+- [x] Convert recorded Blob to Data URL
+- [x] Store recorded audio Data URL in Pinia
+- [x] Display audio player on card back side
+- [x] Show warning if MediaRecorder is not supported
 
-## Phase 5. Saving, Sharing, and Recipient View
+## Phase 5. Cloud Storage & Sharing (Supabase Integration) 🚀
 
+- [x] Install @supabase/supabase-js
+- [x] Initialize Supabase client (`src/lib/supabase.ts`)
+- [x] Create `cards` table in Supabase DB
+- [x] Create `photos` and `voices` storage buckets
+- [x] Implement cloud save logic (Photo/Audio upload + DB insert)
+- [x] Update `CreateCardView.vue` with cloud save support
+- [ ] Update `RecipientCardView.vue` to fetch data from cloud
 - [ ] Use html2canvas to export card image
 - [ ] Add image save button
-- [ ] Save card data to localStorage
-- [ ] Generate card id
-- [ ] Create /card/:id route
-- [ ] Create RecipientCardView.vue
-- [ ] Load card data from localStorage
-- [ ] Show envelope opening animation
-- [ ] Allow recipient to flip card
-- [ ] Allow recipient to play audio
-- [ ] Add reaction buttons
-- [ ] Add confetti effect
+- [x] Generate card id (UUID via Supabase)
+- [x] Create /card/:id route
+- [x] Show envelope opening animation
+- [x] Allow recipient to flip card
+- [x] Allow recipient to play audio
+- [x] Add reaction buttons
+- [x] Add confetti effect
 - [ ] Add Create My Own Card button
 
-## Phase 6. Later Integrations
+## Phase 6. Future Enhancements
 
-- [ ] KakaoTalk Share SDK integration
-- [ ] Real backend storage
+- [ ] KakaoTalk Share SDK (Real sharing)
+- [ ] Login (Supabase Auth)
+- [ ] User's "My Cards" list
 - [ ] Real AI API integration
-- [ ] Cross-device card sharing
-- [ ] Cloud storage for photos and audio
 - [ ] Video template feature
