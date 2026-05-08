@@ -7,6 +7,7 @@ export const useCardStore = defineStore('card', () => {
   const state = ref<CardState>({
     selectedBackgroundId: backgrounds[0].id,
     photoDataUrl: null,
+    photoTransform: { x: 0, y: 0, scale: 1, rotation: 0 },
     placedStickers: [],
     letter: '',
     audioDataUrl: null,
@@ -22,6 +23,12 @@ export const useCardStore = defineStore('card', () => {
 
   function setPhoto(dataUrl: string | null) {
     state.value.photoDataUrl = dataUrl
+    // Reset transform when new photo is uploaded
+    state.value.photoTransform = { x: 0, y: 0, scale: 1, rotation: 0 }
+  }
+
+  function updatePhotoTransform(transform: Partial<{ x: number, y: number, scale: number, rotation: number }>) {
+    state.value.photoTransform = { ...state.value.photoTransform, ...transform }
   }
 
   function addSticker(stickerId: string) {
@@ -40,6 +47,13 @@ export const useCardStore = defineStore('card', () => {
     state.value.placedStickers = state.value.placedStickers.filter(s => s.id !== instanceId)
   }
 
+  function updateStickerTransform(instanceId: string, transform: Partial<{ x: number, y: number, scale: number, rotation: number }>) {
+    const sticker = state.value.placedStickers.find(s => s.id === instanceId)
+    if (sticker) {
+      Object.assign(sticker, transform)
+    }
+  }
+
   function setLetter(text: string) {
     state.value.letter = text
   }
@@ -53,8 +67,10 @@ export const useCardStore = defineStore('card', () => {
     selectedBackground,
     setBackground,
     setPhoto,
+    updatePhotoTransform,
     addSticker,
     removeSticker,
+    updateStickerTransform,
     setLetter,
     setAudio,
   }

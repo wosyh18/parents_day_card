@@ -71,7 +71,7 @@ const sendReaction = (type: string) => {
 
       <!-- Card Display Phase -->
       <div v-else class="flex flex-col items-center gap-8 animate-in fade-in slide-in-from-bottom-10 duration-1000">
-        <InteractiveCard />
+        <InteractiveCard :editable="false" />
         
         <div class="w-full bg-white p-6 rounded-3xl shadow-xl border border-rose-100/50 flex flex-col items-center">
           <p class="text-sm font-bold text-gray-700 mb-4">마음을 답해주세요</p>
