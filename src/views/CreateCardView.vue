@@ -88,7 +88,7 @@ const handleKakaoShare = () => {
     </header>
 
     <main class="w-full max-w-md flex flex-col items-center gap-8">
-      <InteractiveCard />
+      <InteractiveCard :editable="true" />
       
       <div class="w-full space-y-8 bg-white p-6 rounded-3xl shadow-xl shadow-rose-100/50 border border-rose-100/50">
         <!-- Photo Upload -->

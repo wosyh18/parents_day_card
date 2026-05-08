@@ -20,9 +20,17 @@ export interface PlacedSticker {
   scale: number;
 }
 
+export interface PhotoTransform {
+  x: number;
+  y: number;
+  scale: number;
+  rotation: number;
+}
+
 export interface CardState {
   selectedBackgroundId: string;
   photoDataUrl: string | null;
+  photoTransform: PhotoTransform;
   placedStickers: PlacedSticker[];
   letter: string;
   audioDataUrl: string | null;
